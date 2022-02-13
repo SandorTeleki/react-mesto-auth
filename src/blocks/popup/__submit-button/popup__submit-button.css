@@ -10,15 +10,14 @@
     line-height: 17px;
     padding-top: 14px;
     padding-bottom: 14px;
-    margin-top: 15px;
     width: 238px;
+    align-self: center;
 }
 
 @media screen and (min-width: 900px) {
     .popup__submit-button {
         font-size: 18px;
         line-height: 22px;
-        margin-top: 18px;
         width: 358px;
     }  
 }

@@ -1,27 +1,38 @@
 import PopupWithForm from './PopupWithForm';
+import { useEffect } from 'react';
 
-function ConfirmDeletePopup(props) {
-  const isLoading = props.onLoading;
+function ConfirmDeletePopup({isOpen, onSubmit, onLoading, onClose, card}) {
 
-    function handleSubmit(e) {
-        e.preventDefault();
-        props.onSubmit(props.card)
+  function handleSubmit(e) {
+    e.preventDefault();
+    onSubmit(card)
+  }
+
+  useEffect(()=>{
+    if (!isOpen) return;
+    function handleEscClose(e) {
+      if (e.key === 'Escape') {
+        onClose();
+      }
     }
+    document.addEventListener('keydown', handleEscClose);
+    return ()=>{
+      document.removeEventListener('keydown', handleEscClose);
+    }
+  }, [isOpen, onClose])
 
   return (
     <PopupWithForm 
       name={'confirm-delete-form'} 
       title='Вы уверены?'
-      isOpen={props.isOpen}
-      onClose={props.onClose} 
+      isOpen={isOpen}
+      onClose={onClose} 
       onSubmit={handleSubmit} 
-      onLoading={props.onLoading} 
-      card={props.card}>
-      <fieldset className={'popup__inputs'}>
-        <button type="submit" className={`popup__submit-button ${isLoading && '.popup__submit-button_inactive'}`}>
-          {isLoading? 'Удаление...' : 'Да'}
-        </button>
-      </fieldset>
+      isLoading={onLoading} 
+      defaultTitle={'Да'}
+      loadingTitle={'Удаление...'}
+      card={card}>
+        <div className={'popup__inputs'}>{}</div>
     </PopupWithForm>
   )
 }

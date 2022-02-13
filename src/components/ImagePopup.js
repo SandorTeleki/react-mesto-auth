@@ -1,20 +1,44 @@
-function ImagePopup(props) {
-    return (
-      <div className={`popup popup_full-picture ${props.card? 'popup_opened' : ''}`}>
+import { useEffect } from 'react';
+
+function ImagePopup({card, onClose, isOpen}) {
+
+  useEffect(()=>{
+    if (!isOpen) return;
+    function handleEscClose(e) {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    }
+    document.addEventListener('keydown', handleEscClose);
+    return ()=>{
+      document.removeEventListener('keydown', handleEscClose);
+    }
+  }, [isOpen, onClose])
+
+
+  function handleOverlayClose(e) {
+    if (e.target === e.currentTarget && isOpen) {
+      onClose();
+    }
+  }
+    
+  return (
+      <div className={`popup popup_full-picture ${card? 'popup_opened' : ''}`}
+        onClick={handleOverlayClose}>
         <div className="popup__frame">
           <button 
             type="button" 
-            onClick={props.onClose} 
+            onClick={onClose} 
             className="popup__close-button" 
             aria-label="закрыть фото">
             {}
           </button>
           <img 
-            src={props.card?.link} 
-            alt={props.card?.name} 
+            src={card? card.link : ''} 
+            alt={card? card.name : ''} 
             className="popup__image"/>
           <p className="popup__caption">
-            {props.card?.name}
+            {card? card.name : ''}
           </p>
         </div>
       </div>

@@ -1,72 +1,84 @@
 import PopupWithForm from './PopupWithForm';
-import {useContext, useEffect} from 'react';
+import {useContext, useEffect, useMemo} from 'react';
 import {CurrentUserContext} from '../contexts/CurrentUserContext';
-import useInput from '../utils/formInput'
+import useForm from '../utils/useForm';
 
-function EditProfilePopup (props) {
+function EditProfilePopup({onLoading, onClose, onUpdateUser, isOpen}) {
   const currentUser = useContext(CurrentUserContext);
-  const isLoading = props.onLoading;
-  const isOpen = props.isOpen;
-  const name = useInput(currentUser.name, isOpen);
-  const description = useInput(currentUser.about, isOpen);
-  const showDescriptionError = !description.isCorrect && description.error;
-  const showNameError = !name.isCorrect && name.error;
-  const showDisabledSubmitButton = name.disabledSubmitButton || description.disabledSubmitButton || isLoading;
-
+  const initialValues = useMemo(() => ({name: '', about: ''}), [])
+  const validation = useForm(initialValues);
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.onUpdateUser(name.value, description.value)
+    onUpdateUser(validation.values.name, validation.values.about)
   }
 
+  useEffect(() => {
+    if (isOpen) {
+      validation.setValues((prev) => ({
+        ...prev,
+        name: currentUser.name,
+        about: currentUser.about
+      }));
+    } else {
+      validation.resetForm()
+    }
+  }, [isOpen, currentUser])
 
   useEffect(()=>{
-    name.handleChange(currentUser.name);
-    description.handleChange(currentUser.about)
-  }, [currentUser])
-
+    if (!isOpen) return;
+    function handleEscClose(e) {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    }
+    document.addEventListener('keydown', handleEscClose);
+    return ()=>{
+      document.removeEventListener('keydown', handleEscClose);
+    }
+  }, [isOpen, onClose])
 
   return (
     <PopupWithForm 
       name={'edit-profile-form'} 
-      title='Редактировать профиль'
-      isOpen={props.isOpen}
-      onClose={props.onClose} 
-      onSubmit={handleSubmit} 
-      onLoading={props.onLoading}>
-      <fieldset className={'popup__inputs'} form={'edit-profile-form'}>
+      title='Pедактировать профиль'
+      isOpen={isOpen}
+      onClose={onClose}
+      onSubmit={handleSubmit}
+      isLoading={onLoading}
+      isValid={validation.isValid}
+      defaultTitle={'Сохранить'}
+      loadingTitle={'Сохранение...'}>
+      <div className={'popup__inputs'}>
         <input 
           type="text"
           className="popup__input"
-          name="profileName"
-          value={name.value}
-          onChange={name.handleChange}
+          name="name"
+          value={validation.values.name}
+          onChange={validation.handleChange}
           placeholder="имя"
           id="nameinput"
           minLength="2"
           maxLength="40"
           required/>
-        <span className={`popup__error ${showNameError&& 'popup__error_visible'}`}>
-          {name.error}
+        <span className={`popup__error popup__error_visible`}>
+          {validation.errors.name}
         </span>
         <input 
           type="text"
           className="popup__input"
-          name="description"
-          value={description.value}
-          onChange={description.handleChange}
+          name="about"
+          value={validation.values.about}
+          onChange={validation.handleChange}
           placeholder="работа"
-          id="jobdescription"
+          id="aboutinput"
           minLength="2"
           maxLength="200"
           required/>
-        <span className={`popup__error${showDescriptionError&& 'popup__error_visible'}`}>
-          {description.error}
+        <span className={`popup__error popup__error_visible`}>
+          {validation.errors.name}
         </span>
-        <button type="submit" className={`popup__submit-button ${(showDisabledSubmitButton)&& 'popup__submit-button_inactive'}`}>
-          {isLoading? "Сохранение...": "Сохранить"}
-        </button>
-      </fieldset> 
+      </div> 
     </PopupWithForm>
   )
 }

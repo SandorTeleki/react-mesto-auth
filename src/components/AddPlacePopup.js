@@ -1,60 +1,75 @@
 import PopupWithForm from './PopupWithForm.js';
-import useInput from '../utils/formInput.js'
+import { useEffect, useMemo } from 'react';
+import useForm from '../utils/useForm'
 
-function AddPlacePopup(props) {
-  const isLoading = props.onLoading;
-  const isOpen = props.isOpen;
-  const cardName = useInput('', isOpen);
-  const cardLink = useInput('', isOpen);
-  const showCardNameError = !cardName.isCorrect && cardName.error;
-  const showCardLinkError = !cardLink.isCorrect && cardLink.error;
-  const showDisabledSubmitButton = cardName.disabledSubmitButton || cardLink.disabledSubmitButton || isLoading;
-
+function AddPlacePopup({onLoading, isOpen, onAddPlace, onClose}) {
+  const initialValues = useMemo(() => {
+    return {name: '', link: ''}
+  }, [])
+  const validation = useForm(initialValues);
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.onAddPlace(cardName.value, cardLink.value)
+    onAddPlace(validation.values.name, validation.values.link);
   }
+
+  useEffect(()=>{
+    if (!isOpen) return;
+    function handleEscClose(e) {
+        if (e.key === 'Escape') {
+          onClose();
+        }
+    }
+    document.addEventListener('keydown', handleEscClose);
+    return ()=>{
+      document.removeEventListener('keydown', handleEscClose);
+    }
+  }, [isOpen, onClose])
+
+  useEffect(() => {
+    !isOpen && validation.resetForm();
+  }, [isOpen])
 
   return (
     <PopupWithForm 
       name={'add-card-form'} 
       title='Новое место' 
-      isOpen={props.isOpen}
-      onClose={props.onClose} 
+      isOpen={isOpen}
+      onClose={onClose} 
       onSubmit={handleSubmit}
-      onLoading={props.onLoading}>
-      <fieldset className={'popup__inputs'}>
+      isValid={validation.isValid}
+      isLoading={onLoading}
+      defaultTitle={'Создать'}
+      loadingTitle={'Сохранение...'}
+      >
+      <div className={'popup__inputs'}>
         <input 
           type="text"
           className="popup__input"
           name="name"
-          value={cardName.value}
-          onChange={cardName.handleChange}
+          value={validation.values.name}
+          onChange={validation.handleChange}
           placeholder="Название"
           id="add-title"
           minLength="2"
           maxLength="30"
           required/>
-        <span className={`popup__error ${showCardNameError&& 'popup__error_visible'}`}>
-          {cardName.error}
+        <span className={`popup__error popup__error_visible`}>
+          {validation.errors.name}
         </span>
         <input 
           type="url"
           className="popup__input"
           name="link"
-          value={cardLink.value}
-          onChange={cardLink.handleChange}
+          value={validation.values.link}
+          onChange={validation.handleChange}
           placeholder="Ссылка на картинку"
           id="add-link"
           required/>
-        <span className={`popup__error ${showCardLinkError&& 'popup__error_visible'}`}>
-          {cardLink.error}
+        <span className={`popup__error popup__error_visible`}>
+          {validation.errors.link}
         </span>
-        <button type="submit" className={`popup__submit-button ${showDisabledSubmitButton && 'popup__submit-button_inactive'}`}>
-          {isLoading? 'Сохранение...' : 'Создать'}
-        </button>
-      </fieldset>
+      </div>
     </PopupWithForm>
   )
 }
