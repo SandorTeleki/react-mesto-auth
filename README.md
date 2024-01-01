@@ -29,7 +29,7 @@ Fromtend сервиса Mesto React, где пользователь может 
 ### Планы по доработке проекта:
 На данный момент, нет.
 
-Страница на Github: https://sandorteleki.github.io/react-mesto-auth/
+Страница на Github: https://sandorteleki.github.io/react-mesto-auth/  
 &copy; 2022 Шандор Телеки
 
 -------------------
@@ -63,5 +63,5 @@ Frontend for Mesto React project. User can share their photos with other users. 
 ### Future plans:
 Currently, none.
 
-Page hosted through GitHub Pages: https://sandorteleki.github.io/react-mesto-auth/
+Page hosted through GitHub Pages: https://sandorteleki.github.io/react-mesto-auth/  
 &copy; 2022 Sandor Teleki
