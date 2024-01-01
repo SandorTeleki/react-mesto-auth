@@ -19,11 +19,12 @@ Fromtend сервиса Mesto React, где пользователь может 
 ![CSS3](https://img.shields.io/badge/-CSS3-090909?style=for-the-badge&logo=CSS3)
 
 ### Инструкция по установке:
-1. Клонировать репозиторий
+
+1. Клонировать репозиторий:  
 `git clone https://github.com/SandorTeleki/react-mesto-auth.git`
-2. Установить зависимости
+2. Установить зависимости:  
 `npm i`
-3. Запустить локально так:
+3. Запустить локально так:  
 `npm start`
 
 ### Планы по доработке проекта:
@@ -53,11 +54,12 @@ Frontend for Mesto React project. User can share their photos with other users. 
 ![CSS3](https://img.shields.io/badge/-CSS3-090909?style=for-the-badge&logo=CSS3)
 
 ### Installation instructions:
-1. Clone repository:
+
+1. Clone repository:  
 `git clone https://github.com/SandorTeleki/react-mesto-auth.git`
-2. Install dependencies:
+2. Install dependencies:  
 `npm i`
-3. Start it locally with:
+3. Start it locally with:  
 `npm start`
 
 ### Future plans:
