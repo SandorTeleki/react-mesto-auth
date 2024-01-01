@@ -45,7 +45,7 @@ Frontend for Mesto React project. User can share their photos with other users. 
 - Change user information 
 - Set / delete likes
 
-### Technologies
+### Technologies:
 ![React](https://img.shields.io/badge/-React-090909?style=for-the-badge&logo=React)
 ![JavaScript](https://img.shields.io/badge/-JavaScript-090909?style=for-the-badge&logo=JavaScript)
 ![Webpack](https://img.shields.io/badge/-Webpack-090909?style=for-the-badge&logo=Webpack)
